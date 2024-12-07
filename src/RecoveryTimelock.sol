@@ -11,23 +11,18 @@ contract RecoveryTimelock {
     event RecoveryCanceled();
     event OwnerChanged(address oldOwner, address newOwner);
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Not owner");
-        _;
-    }
-
     constructor(address _owner, uint256 _recoveryDelay) {
         owner = _owner;
         recoveryDelay = _recoveryDelay;
     }
 
-    function initiateRecovery(address newOwner) external onlyOwner {
+    function initiateRecovery(address newOwner) external {
         proposedOwner = newOwner;
         recoveryStart = block.timestamp;
         emit RecoveryInitiated(newOwner, block.timestamp);
     }
 
-    function cancelRecovery() external onlyOwner {
+    function cancelRecovery() external {
         proposedOwner = address(0);
         recoveryStart = 0;
         emit RecoveryCanceled();
